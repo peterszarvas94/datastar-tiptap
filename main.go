@@ -1,14 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/starfederation/datastar-go/datastar"
@@ -27,6 +26,10 @@ type ContentPayload struct {
 	HTML string `json:"html"`
 }
 
+type SaveSignals struct {
+	EditorHTML string `json:"editorHtml"`
+}
+
 const dbPath = "data/content.db"
 const defaultContent = `<h2>Welcome to the editor</h2>
 <p>This content is stored in SQLite.</p>
@@ -39,54 +42,106 @@ func main() {
 	}
 	defer db.Close()
 
-	e := echo.New()
-	e.Renderer = &TemplateRenderer{
+	renderer := &TemplateRenderer{
 		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
+
+	e := echo.New()
+	e.Renderer = renderer
 
 	e.Static("/static", "static")
 
 	e.GET("/", func(c echo.Context) error {
+		content, err := loadContent(db)
+		if err != nil {
+			return err
+		}
 		return renderTemplate(c, "index", map[string]any{
-			"Title": "Datastar + Tiptap",
+			"Title":        "Datastar + Tiptap",
+			"ContentHTML":  content,
+			"RenderedHTML": template.HTML(content),
 		})
 	})
 
-	e.GET("/content-status", func(c echo.Context) error {
+	e.GET("/content", func(c echo.Context) error {
 		content, err := loadContent(db)
 		if err != nil {
 			return err
 		}
-		status := fmt.Sprintf(
-			`<div id="content-status">Saved content length: %d characters</div>`,
-			len(content),
-		)
+		fmt.Printf("Content: %s\n", content)
+
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-		time.Sleep(500 * time.Millisecond)
-		sse.PatchElements(status)
+
+		sse.PatchElements(content,
+			datastar.WithSelector("#editor > div"),
+			datastar.WithMode(datastar.ElementPatchModeInner),
+		)
+
+		el, err := renderTemplateFragment(c, "content-preview", map[string]any{
+			"ContentPreview": content,
+		})
+		if err != nil {
+			return err
+		}
+		sse.PatchElements(el)
+
+		el, err = renderTemplateFragment(c, "rendered-html", map[string]any{
+			"RenderedPreview": template.HTML(content),
+		})
+		if err != nil {
+			return err
+		}
+		sse.PatchElements(el)
+
 		return nil
 	})
 
-	e.GET("/api/content", func(c echo.Context) error {
-		content, err := loadContent(db)
+	e.PATCH("/content", func(c echo.Context) error {
+		// patch
+		var signals SaveSignals
+		if err := datastar.ReadSignals(c.Request(), &signals); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid signals"})
+		}
+		if err := saveContent(db, signals.EditorHTML); err != nil {
+			return err
+		}
+
+		// update ui
+		sse := datastar.NewSSE(c.Response().Writer, c.Request())
+
+		el, err := renderTemplateFragment(c, "content-preview", map[string]any{
+			"ContentPreview": signals.EditorHTML,
+		})
 		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, map[string]string{"html": content})
-	})
+		sse.PatchElements(el)
 
-	e.PATCH("/api/content", func(c echo.Context) error {
-		var payload ContentPayload
-		if err := json.NewDecoder(c.Request().Body).Decode(&payload); err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
-		}
-		if err := saveContent(db, payload.HTML); err != nil {
+		el, err = renderTemplateFragment(c, "rendered-html", map[string]any{
+			"RenderedPreview": template.HTML(signals.EditorHTML),
+		})
+		if err != nil {
 			return err
 		}
-		return c.JSON(http.StatusOK, map[string]bool{"success": true})
+		sse.PatchElements(el)
+
+		return nil
 	})
 
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func renderTemplateFragment(c echo.Context, templateName string, data any) (string, error) {
+	renderer, ok := c.Echo().Renderer.(*TemplateRenderer)
+	if !ok || renderer == nil {
+		return "", echo.ErrInternalServerError
+	}
+	var buf bytes.Buffer
+	err := renderer.templates.ExecuteTemplate(&buf, templateName, data)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
 
 func renderTemplate(c echo.Context, templateName string, data any) error {

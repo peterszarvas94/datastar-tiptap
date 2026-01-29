@@ -6777,6 +6777,9 @@
   .h-7 {
     height: calc(var(--spacing) * 7);
   }
+  .min-h-90 {
+    min-height: calc(var(--spacing) * 90);
+  }
   .min-h-\[360px\] {
     min-height: 360px;
   }

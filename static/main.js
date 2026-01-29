@@ -1,3 +1,4 @@
+import "datastar";
 import { Editor, StarterKit } from "tiptap-bundle";
 import htmlBeautify from "js-beautify";
 
@@ -6,29 +7,13 @@ const API_URL = "";
 // API functions
 async function getContent() {
   try {
-    const response = await fetch(`${API_URL}/api/content`);
-    const data = await response.json();
-    return data.html || "";
+    // this returns html
+    const response = await fetch(`${API_URL}/content`);
+    const html = await response.text();
+    return html || "";
   } catch (error) {
     console.error("Failed to load content:", error);
     return "";
-  }
-}
-
-async function saveContent(html) {
-  try {
-    const response = await fetch(`${API_URL}/api/content`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ html }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to save content");
-    }
-    return true;
-  } catch (error) {
-    console.error("Failed to save content:", error);
-    return false;
   }
 }
 
@@ -36,7 +21,7 @@ async function saveContent(html) {
 const editor = new Editor({
   element: document.querySelector("#editor"),
   extensions: [StarterKit],
-  content: "",
+  content: "", // backend fills this
   onUpdate: () => {
     updateToolbarState();
   },
@@ -45,13 +30,8 @@ const editor = new Editor({
   },
 });
 
-// Load initial content
-(async () => {
-  const content = await getContent();
-  editor.commands.setContent(content);
-  updateToolbarState();
-  await updateDbPreview();
-})();
+window.editor = editor;
+window.htmlBeautify = htmlBeautify;
 
 // Button click handlers
 const getBtn = (id) => {
@@ -100,22 +80,6 @@ getBtn("#btn-redo").addEventListener("click", () => {
   editor.chain().focus().redo().run();
 });
 
-// Save button handler
-getBtn("#btn-save").addEventListener("click", async () => {
-  let html = editor.getHTML();
-
-  // Remove trailing empty paragraphs
-  html = html.replace(/(<p><\/p>\s*)+$/, "");
-
-  const formatted = htmlBeautify.html_beautify(html, { indent_size: 2 });
-  const success = await saveContent(formatted);
-  if (success) {
-    await updateDbPreview();
-  } else {
-    console.error("Save failed");
-  }
-});
-
 // Copy button handler
 getBtn("#btn-copy").addEventListener("click", async () => {
   const content = await getContent();
@@ -132,22 +96,6 @@ getBtn("#btn-copy").addEventListener("click", async () => {
     console.error("Failed to copy:", err);
   }
 });
-
-// Update database preview
-async function updateDbPreview() {
-  const preview = document.querySelector("#db-preview");
-  if (!preview) return;
-  const content = await getContent();
-  preview.textContent = content;
-  updateRenderedPreview(content);
-}
-
-// Update rendered preview
-function updateRenderedPreview(content) {
-  const renderedPreview = document.querySelector("#rendered-preview");
-  if (!renderedPreview) return;
-  renderedPreview.innerHTML = content;
-}
 
 // Update active states
 function updateToolbarState() {
