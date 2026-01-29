@@ -1,11 +1,57 @@
 @import "tailwindcss";
+@plugin "daisyui";
+@plugin "@tailwindcss/typography";
 
-@source not "./tailwindcss";
-@source not "./daisyui{,*}.mjs";
+/* Tiptap editor with prose styling */
+.tiptap {
+  @apply prose max-w-none focus:outline-none;
+}
 
-@plugin "./daisyui.mjs";
+/* Fix Tiptap + prose common issues */
+.tiptap p {
+  @apply my-2;
+}
 
-/* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
-/* @plugin "./daisyui-theme.mjs" { */
-/*   custom theme here */
-/* } */
+.tiptap li > p {
+  @apply my-0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  @apply my-2;
+}
+
+.tiptap li {
+  @apply my-0;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  @apply mt-4 mb-2;
+}
+
+.tiptap h1:first-child,
+.tiptap h2:first-child,
+.tiptap h3:first-child,
+.tiptap p:first-child {
+  @apply mt-0;
+}
+
+.tiptap blockquote {
+  @apply my-2;
+}
+
+.tiptap pre {
+  @apply my-2;
+}
+
+.tiptap hr {
+  @apply my-4;
+}
+
+/* Toolbar icons */
+#toolbar button svg {
+  display: block;
+  margin: auto;
+}

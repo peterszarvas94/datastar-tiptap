@@ -4,25 +4,25 @@
 
 @layer base {
   body {
-    @apply bg-slate-100 text-slate-900 antialiased;
+    @apply bg-base-100 text-base-content antialiased;
   }
 }
 
 @layer components {
-  .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+.card {
+    @apply rounded-2xl border border-base-300 bg-base-100 shadow-sm;
   }
 
   .card-body {
     @apply p-6;
   }
 
-  .btn {
-    @apply inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400;
+.btn {
+    @apply inline-flex items-center justify-center rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-sm font-medium text-base-content/80 transition hover:border-base-content/30 hover:bg-base-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
 
-  .btn-primary {
-    @apply border-slate-900 bg-slate-900 text-white hover:bg-slate-800;
+.btn-primary {
+    @apply border-primary bg-primary text-primary-content hover:bg-primary/90;
   }
 
   .btn-icon {
@@ -69,20 +69,20 @@
 .tiptap blockquote {
   margin: 0.5rem 0;
   padding-left: 0.75rem;
-  border-left: 3px solid rgb(148 163 184 / 0.6);
+  border-left: 3px solid var(--color-base-300);
 }
 
 .tiptap pre {
   margin: 0.5rem 0;
   padding: 0.75rem;
-  background: rgb(241 245 249);
+  background: var(--color-base-200);
   border-radius: 0.75rem;
   overflow-x: auto;
 }
 
 .tiptap hr {
   margin: 1rem 0;
-  border-color: rgb(203 213 225);
+  border-color: var(--color-base-300);
 }
 
 /* Toolbar icons */

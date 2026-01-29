@@ -1,5 +1,4 @@
-import { Editor } from "@tiptap/core";
-import StarterKit from "@tiptap/starter-kit";
+import { Editor, StarterKit } from "tiptap-bundle";
 import htmlBeautify from "js-beautify";
 
 const API_URL = "";

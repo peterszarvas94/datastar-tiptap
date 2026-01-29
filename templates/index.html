@@ -1,44 +1,28 @@
 {{define "index"}}
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <title>{{.Title}}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/assets/style.css" />
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"
-    ></script>
+    <link rel="stylesheet" href="/static/generated.css" />
     <script type="importmap">
       {
         "imports": {
-          "js-beautify": "/assets/vendor/js-beautify/index.js",
-          "@tiptap/core": "/assets/vendor/@tiptap/core/dist/index.js",
-          "@tiptap/extension-code-block": "/assets/vendor/@tiptap/extension-code-block/dist/index.js",
-          "@tiptap/starter-kit": "/assets/vendor/@tiptap/starter-kit/dist/index.js",
-          "@tiptap/pm/state": "/assets/vendor/@tiptap/pm/dist/state/index.js",
-          "@tiptap/pm/model": "/assets/vendor/@tiptap/pm/dist/model/index.js",
-          "@tiptap/pm/view": "/assets/vendor/@tiptap/pm/dist/view/index.js",
-          "@tiptap/pm/transform": "/assets/vendor/@tiptap/pm/dist/transform/index.js",
-          "@tiptap/pm/commands": "/assets/vendor/@tiptap/pm/dist/commands/index.js",
-          "@tiptap/pm/schema-list": "/assets/vendor/@tiptap/pm/dist/schema-list/index.js",
-          "@tiptap/pm/keymap": "/assets/vendor/@tiptap/pm/dist/keymap/index.js",
-          "@tiptap/pm/inputrules": "/assets/vendor/@tiptap/pm/dist/inputrules/index.js",
-          "@tiptap/pm/history": "/assets/vendor/@tiptap/pm/dist/history/index.js",
-          "@tiptap/pm/dropcursor": "/assets/vendor/@tiptap/pm/dist/dropcursor/index.js",
-          "@tiptap/pm/gapcursor": "/assets/vendor/@tiptap/pm/dist/gapcursor/index.js"
+          "js-beautify": "/static/vendor/js-beautify/index.js",
+          "tiptap-bundle": "/static/vendor/tiptap.bundle.js",
+          "datastar": "/static/vendor/datastar/datastar.js"
         }
       }
     </script>
-    <script type="module" src="/assets/main.js"></script>
+    <script type="module" src="/static/main.js"></script>
   </head>
   <body class="min-h-screen">
     <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
       <header class="space-y-2">
         <h1 class="text-3xl font-bold">{{.Title}}</h1>
-        <p class="text-slate-500">
-          Tiptap editor running on a single Echo + Datastar server.
+        <p class="text-base-content/70">
+          Tiptap editor with a minimal server-backed workspace.
         </p>
       </header>
 
@@ -46,119 +30,110 @@
         <div class="card-body space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <h2 class="text-lg font-semibold">Editor</h2>
-            <button
-              class="btn"
-              data-on:click="@get('/content-status')"
-            >
-              Check server status
-            </button>
-          </div>
-          <div id="content-status" class="text-sm text-slate-500">
-            Waiting for status check.
           </div>
           <div class="card shadow-sm">
             <div class="card-body p-0">
               <div
                 id="toolbar"
-                class="flex flex-wrap gap-1 border-b border-slate-200 bg-slate-50 p-3"
+                class="flex flex-wrap gap-1 border-b border-base-300 bg-base-200 p-3"
               >
                 <button
                   id="btn-bold"
                   title="Bold (Ctrl+B)"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#bold" /></svg>
                 </button>
                 <button
                   id="btn-italic"
                   title="Italic (Ctrl+I)"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#italic" /></svg>
                 </button>
                 <button
                   id="btn-strike"
                   title="Strikethrough"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#strikethrough" /></svg>
                 </button>
-                <span class="mx-1 h-7 w-px bg-slate-200"></span>
+                <span class="mx-1 h-7 w-px bg-base-300"></span>
                 <button
                   id="btn-paragraph"
                   title="Paragraph"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#heading" /></svg>
                 </button>
                 <button
                   id="btn-h1"
                   title="Heading 1"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#heading-1" /></svg>
                 </button>
                 <button
                   id="btn-h2"
                   title="Heading 2"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#heading-2" /></svg>
                 </button>
                 <button
                   id="btn-h3"
                   title="Heading 3"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#heading-3" /></svg>
                 </button>
-                <span class="mx-1 h-7 w-px bg-slate-200"></span>
+                <span class="mx-1 h-7 w-px bg-base-300"></span>
                 <button
                   id="btn-bullet"
                   title="Bullet List"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#list" /></svg>
                 </button>
                 <button
                   id="btn-ordered"
                   title="Numbered List"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#list-ordered" /></svg>
                 </button>
-                <span class="mx-1 h-7 w-px bg-slate-200"></span>
+                <span class="mx-1 h-7 w-px bg-base-300"></span>
                 <button
                   id="btn-blockquote"
                   title="Blockquote"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#quote" /></svg>
                 </button>
                 <button
                   id="btn-code"
                   title="Code Block"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#code" /></svg>
                 </button>
-                <span class="mx-1 h-7 w-px bg-slate-200"></span>
+                <span class="mx-1 h-7 w-px bg-base-300"></span>
                 <button
                   id="btn-undo"
                   title="Undo (Ctrl+Z)"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#undo" /></svg>
                 </button>
                 <button
                   id="btn-redo"
                   title="Redo (Ctrl+Shift+Z)"
-                  class="btn btn-icon"
+                  class="btn btn-sm btn-square"
                 >
                   <svg width="16" height="16"><use href="#redo" /></svg>
                 </button>
-                <span class="mx-1 h-7 w-px bg-slate-200"></span>
-                <button id="btn-save" title="Save" class="btn btn-icon btn-primary">
+                <span class="mx-1 h-7 w-px bg-base-300"></span>
+                <button id="btn-save" title="Save" class="btn btn-sm btn-primary">
                   <svg width="16" height="16"><use href="#save" /></svg>
                 </button>
               </div>
@@ -170,13 +145,13 @@
             <div class="card-body">
               <div class="flex items-center justify-between">
                 <h3 class="text-base font-semibold">Stored HTML</h3>
-                <button id="btn-copy" title="Copy to clipboard" class="btn btn-icon">
+                <button id="btn-copy" title="Copy to clipboard" class="btn btn-sm btn-square">
                   <svg width="16" height="16"><use href="#copy" /></svg>
                 </button>
               </div>
               <pre
                 id="db-preview"
-                class="rounded-xl bg-slate-50 p-4 text-sm text-slate-700 overflow-x-auto whitespace-pre-wrap"
+                class="rounded-xl bg-base-200 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
               ></pre>
             </div>
           </div>
@@ -186,7 +161,7 @@
               <h3 class="text-base font-semibold">Rendered Preview</h3>
               <div
                 id="rendered-preview"
-                class="tiptap rounded-xl bg-slate-50 p-6"
+                class="tiptap rounded-xl bg-base-200 p-6"
               ></div>
             </div>
           </div>
