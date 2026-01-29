@@ -30,9 +30,6 @@ const editor = new Editor({
   },
 });
 
-window.editor = editor;
-window.htmlBeautify = htmlBeautify;
-
 // Button click handlers
 const getBtn = (id) => {
   const btn = document.querySelector(id);
@@ -40,9 +37,9 @@ const getBtn = (id) => {
   return btn;
 };
 
-getBtn("#btn-bold").addEventListener("click", () => {
-  editor.chain().focus().toggleBold().run();
-});
+// getBtn("#btn-bold").addEventListener("click", () => {
+//   editor.chain().focus().toggleBold().run();
+// });
 getBtn("#btn-italic").addEventListener("click", () => {
   editor.chain().focus().toggleItalic().run();
 });
@@ -80,23 +77,6 @@ getBtn("#btn-redo").addEventListener("click", () => {
   editor.chain().focus().redo().run();
 });
 
-// Copy button handler
-getBtn("#btn-copy").addEventListener("click", async () => {
-  const content = await getContent();
-  try {
-    await navigator.clipboard.writeText(content);
-    // Optional: Show feedback (could add a toast notification later)
-    const btn = getBtn("#btn-copy");
-    const originalTitle = btn.title;
-    btn.title = "Copied!";
-    setTimeout(() => {
-      btn.title = originalTitle;
-    }, 2000);
-  } catch (err) {
-    console.error("Failed to copy:", err);
-  }
-});
-
 // Update active states
 function updateToolbarState() {
   toggleToolbarButton("#btn-bold", editor.isActive("bold"));
@@ -123,3 +103,6 @@ function toggleToolbarButton(selector, isActive) {
   if (!button) return;
   button.classList.toggle("btn-secondary", isActive);
 }
+
+window.editor = editor;
+window.beautify = htmlBeautify.html_beautify;

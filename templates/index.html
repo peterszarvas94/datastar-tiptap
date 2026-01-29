@@ -19,7 +19,7 @@
   </head>
   <body
     class="min-h-screen"
-    data-signals="{editorHtml: ''}"
+    data-signals="{editorHtml: '', contentPreview: 'test'}"
     data-on:load__window="@get('/content')"
   >
     <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
@@ -45,6 +45,7 @@
                   id="btn-bold"
                   title="Bold (Ctrl+B)"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleBold().run()"
                 >
                   <svg width="16" height="16"><use href="#bold" /></svg>
                 </button>
@@ -70,7 +71,7 @@
                   title="Paragraph"
                   class="btn btn-sm btn-square"
                 >
-                  <svg width="16" height="16"><use href="#heading" /></svg>
+                  <svg width="16" height="16"><use href="#paragraph" /></svg>
                 </button>
                 <button
                   id="btn-h1"
@@ -143,7 +144,7 @@
                   id="btn-save"
                   title="Save"
                   class="btn btn-sm btn-primary"
-                  data-on:click="$editorHtml = window.htmlBeautify.html_beautify(window.editor.getHTML(), { indent_size: 2 }); @patch('/content')"
+                  data-on:click="$editorHtml = beautify(window.editor.getHTML(), { indent_size: 2 }); @patch('/content')"
                 >
                   <svg width="16" height="16"><use href="#save" /></svg>
                 </button>
@@ -160,6 +161,7 @@
                   id="btn-copy"
                   title="Copy to clipboard"
                   class="btn btn-sm btn-square"
+                  data-on:click="navigator.clipboard.writeText($editorHtml)"
                 >
                   <svg width="16" height="16"><use href="#copy" /></svg>
                 </button>
@@ -168,8 +170,10 @@
               <pre
                 id="db-preview"
                 class="rounded-xl bg-base-200 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
+                data-on:click="navigator.clipboard.writeText($contentPreview)"
+                data-text="beautify($contentPreview, { indent_size: 2 })"
               >
-  {{.ContentPreview}}</pre
+{{.ContentPreview}}</pre
               >
               {{end}}
             </div>
@@ -232,6 +236,19 @@
         <path d="M16 4H9a3 3 0 0 0-2.83 4" />
         <path d="M14 12a4 4 0 0 1 0 8H6" />
         <line x1="4" x2="20" y1="12" y2="12" />
+      </symbol>
+      <symbol
+        id="paragraph"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M13 4v16" />
+        <path d="M17 4v16" />
+        <path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13" />
       </symbol>
       <symbol
         id="heading"

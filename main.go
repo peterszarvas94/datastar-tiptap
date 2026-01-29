@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/starfederation/datastar-go/datastar"
@@ -48,6 +49,14 @@ func main() {
 
 	e := echo.New()
 	e.Renderer = renderer
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			if c.Request().URL.Path == "/static/vendor/tiptap.bundle.js" {
+				c.Response().Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+			}
+			return next(c)
+		}
+	})
 
 	e.Static("/static", "static")
 
@@ -68,7 +77,6 @@ func main() {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Content: %s\n", content)
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
 
@@ -77,21 +85,16 @@ func main() {
 			datastar.WithMode(datastar.ElementPatchModeInner),
 		)
 
-		el, err := renderTemplateFragment(c, "content-preview", map[string]any{
-			"ContentPreview": content,
-		})
-		if err != nil {
-			return err
-		}
-		sse.PatchElements(el)
-
-		el, err = renderTemplateFragment(c, "rendered-html", map[string]any{
+		el, err := renderTemplateFragment(c, "rendered-html", map[string]any{
 			"RenderedPreview": template.HTML(content),
 		})
 		if err != nil {
 			return err
 		}
 		sse.PatchElements(el)
+
+		// stipping newlines so datastar doesn't complain, beautify runs in the frontend
+		sse.PatchSignals(fmt.Appendf(nil, `{"contentPreview": "%s"}`, stripNewlines(content)))
 
 		return nil
 	})
@@ -109,21 +112,16 @@ func main() {
 		// update ui
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
 
-		el, err := renderTemplateFragment(c, "content-preview", map[string]any{
-			"ContentPreview": signals.EditorHTML,
-		})
-		if err != nil {
-			return err
-		}
-		sse.PatchElements(el)
-
-		el, err = renderTemplateFragment(c, "rendered-html", map[string]any{
+		el, err := renderTemplateFragment(c, "rendered-html", map[string]any{
 			"RenderedPreview": template.HTML(signals.EditorHTML),
 		})
 		if err != nil {
 			return err
 		}
 		sse.PatchElements(el)
+
+		// stipping newlines so datastar doesn't complain, beautify runs in the frontend
+		sse.PatchSignals(fmt.Appendf(nil, `{"contentPreview": "%s"}`, stripNewlines((signals.EditorHTML))))
 
 		return nil
 	})
@@ -184,4 +182,8 @@ func saveContent(db *sql.DB, html string) error {
 		html,
 	)
 	return err
+}
+
+func stripNewlines(html string) string {
+	return strings.ReplaceAll(html, "\n", "")
 }
