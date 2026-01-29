@@ -4,19 +4,6 @@ import htmlBeautify from "js-beautify";
 
 const API_URL = "";
 
-// API functions
-async function getContent() {
-  try {
-    // this returns html
-    const response = await fetch(`${API_URL}/content`);
-    const html = await response.text();
-    return html || "";
-  } catch (error) {
-    console.error("Failed to load content:", error);
-    return "";
-  }
-}
-
 // Initialize editor
 const editor = new Editor({
   element: document.querySelector("#editor"),
@@ -28,53 +15,6 @@ const editor = new Editor({
   onSelectionUpdate: () => {
     updateToolbarState();
   },
-});
-
-// Button click handlers
-const getBtn = (id) => {
-  const btn = document.querySelector(id);
-  if (!btn) throw new Error(`Button ${id} not found`);
-  return btn;
-};
-
-// getBtn("#btn-bold").addEventListener("click", () => {
-//   editor.chain().focus().toggleBold().run();
-// });
-getBtn("#btn-italic").addEventListener("click", () => {
-  editor.chain().focus().toggleItalic().run();
-});
-getBtn("#btn-strike").addEventListener("click", () => {
-  editor.chain().focus().toggleStrike().run();
-});
-getBtn("#btn-paragraph").addEventListener("click", () => {
-  editor.chain().focus().setParagraph().run();
-});
-getBtn("#btn-h1").addEventListener("click", () => {
-  editor.chain().focus().toggleHeading({ level: 1 }).run();
-});
-getBtn("#btn-h2").addEventListener("click", () => {
-  editor.chain().focus().toggleHeading({ level: 2 }).run();
-});
-getBtn("#btn-h3").addEventListener("click", () => {
-  editor.chain().focus().toggleHeading({ level: 3 }).run();
-});
-getBtn("#btn-bullet").addEventListener("click", () => {
-  editor.chain().focus().toggleBulletList().run();
-});
-getBtn("#btn-ordered").addEventListener("click", () => {
-  editor.chain().focus().toggleOrderedList().run();
-});
-getBtn("#btn-blockquote").addEventListener("click", () => {
-  editor.chain().focus().toggleBlockquote().run();
-});
-getBtn("#btn-code").addEventListener("click", () => {
-  editor.chain().focus().toggleCodeBlock().run();
-});
-getBtn("#btn-undo").addEventListener("click", () => {
-  editor.chain().focus().undo().run();
-});
-getBtn("#btn-redo").addEventListener("click", () => {
-  editor.chain().focus().redo().run();
 });
 
 // Update active states

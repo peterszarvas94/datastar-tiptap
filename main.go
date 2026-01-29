@@ -105,7 +105,9 @@ func main() {
 		if err := datastar.ReadSignals(c.Request(), &signals); err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid signals"})
 		}
-		if err := saveContent(db, signals.EditorHTML); err != nil {
+
+		content := trimTrailingP(signals.EditorHTML)
+		if err := saveContent(db, content); err != nil {
 			return err
 		}
 
@@ -113,7 +115,7 @@ func main() {
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
 
 		el, err := renderTemplateFragment(c, "rendered-html", map[string]any{
-			"RenderedPreview": template.HTML(signals.EditorHTML),
+			"RenderedPreview": template.HTML(content),
 		})
 		if err != nil {
 			return err
@@ -121,7 +123,7 @@ func main() {
 		sse.PatchElements(el)
 
 		// stipping newlines so datastar doesn't complain, beautify runs in the frontend
-		sse.PatchSignals(fmt.Appendf(nil, `{"contentPreview": "%s"}`, stripNewlines((signals.EditorHTML))))
+		sse.PatchSignals(fmt.Appendf(nil, `{"contentPreview": "%s"}`, stripNewlines((content))))
 
 		return nil
 	})
@@ -173,6 +175,10 @@ func loadContent(db *sql.DB) (string, error) {
 		return "", err
 	}
 	return defaultContent, nil
+}
+
+func trimTrailingP(html string) string {
+	return strings.TrimSuffix(html, "<p></p>")
 }
 
 func saveContent(db *sql.DB, html string) error {

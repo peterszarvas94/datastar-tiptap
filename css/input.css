@@ -50,6 +50,10 @@
   @apply my-4;
 }
 
+.tiptap div[contenteditable="true"] {
+  @apply bg-base-200 p-2 rounded-lg;
+}
+
 /* Toolbar icons */
 #toolbar button svg {
   display: block;

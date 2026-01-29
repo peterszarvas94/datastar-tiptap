@@ -20,6 +20,7 @@
     --text-3xl--line-height: calc(2.25 / 1.875);
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -6780,9 +6781,6 @@
   .min-h-90 {
     min-height: calc(var(--spacing) * 90);
   }
-  .min-h-\[360px\] {
-    min-height: 360px;
-  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -10136,6 +10134,11 @@
 }
 .tiptap hr {
   margin-block: calc(var(--spacing) * 4);
+}
+.tiptap div[contenteditable="true"] {
+  border-radius: var(--radius-lg);
+  background-color: var(--color-base-200);
+  padding: calc(var(--spacing) * 2);
 }
 #toolbar button svg {
   display: block;

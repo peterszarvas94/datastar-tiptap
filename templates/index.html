@@ -45,7 +45,7 @@
                   id="btn-bold"
                   title="Bold (Ctrl+B)"
                   class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleBold().run()"
+                  data-on:click="window.editor.chain().focus().toggleBold().run()"
                 >
                   <svg width="16" height="16"><use href="#bold" /></svg>
                 </button>
@@ -53,6 +53,7 @@
                   id="btn-italic"
                   title="Italic (Ctrl+I)"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleItalic().run()"
                 >
                   <svg width="16" height="16"><use href="#italic" /></svg>
                 </button>
@@ -60,6 +61,7 @@
                   id="btn-strike"
                   title="Strikethrough"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleStrike().run()"
                 >
                   <svg width="16" height="16">
                     <use href="#strikethrough" />
@@ -70,6 +72,7 @@
                   id="btn-paragraph"
                   title="Paragraph"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().setParagraph().run()"
                 >
                   <svg width="16" height="16"><use href="#paragraph" /></svg>
                 </button>
@@ -77,6 +80,7 @@
                   id="btn-h1"
                   title="Heading 1"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
                 >
                   <svg width="16" height="16"><use href="#heading-1" /></svg>
                 </button>
@@ -84,6 +88,7 @@
                   id="btn-h2"
                   title="Heading 2"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
                 >
                   <svg width="16" height="16"><use href="#heading-2" /></svg>
                 </button>
@@ -91,6 +96,7 @@
                   id="btn-h3"
                   title="Heading 3"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
                 >
                   <svg width="16" height="16"><use href="#heading-3" /></svg>
                 </button>
@@ -99,6 +105,7 @@
                   id="btn-bullet"
                   title="Bullet List"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleBulletList().run()"
                 >
                   <svg width="16" height="16"><use href="#list" /></svg>
                 </button>
@@ -106,6 +113,7 @@
                   id="btn-ordered"
                   title="Numbered List"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleOrderedList().run()"
                 >
                   <svg width="16" height="16"><use href="#list-ordered" /></svg>
                 </button>
@@ -114,6 +122,7 @@
                   id="btn-blockquote"
                   title="Blockquote"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleBlockquote().run()"
                 >
                   <svg width="16" height="16"><use href="#quote" /></svg>
                 </button>
@@ -121,6 +130,7 @@
                   id="btn-code"
                   title="Code Block"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleCodeBlock().run()"
                 >
                   <svg width="16" height="16"><use href="#code" /></svg>
                 </button>
@@ -129,6 +139,7 @@
                   id="btn-undo"
                   title="Undo (Ctrl+Z)"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().undo().run()"
                 >
                   <svg width="16" height="16"><use href="#undo" /></svg>
                 </button>
@@ -136,6 +147,7 @@
                   id="btn-redo"
                   title="Redo (Ctrl+Shift+Z)"
                   class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().redo().run()"
                 >
                   <svg width="16" height="16"><use href="#redo" /></svg>
                 </button>
@@ -144,7 +156,7 @@
                   id="btn-save"
                   title="Save"
                   class="btn btn-sm btn-primary"
-                  data-on:click="$editorHtml = beautify(window.editor.getHTML(), { indent_size: 2 }); @patch('/content')"
+                  data-on:click="$editorHtml = beautify(editor.getHTML(), { indent_size: 2 }); @patch('/content')"
                 >
                   <svg width="16" height="16"><use href="#save" /></svg>
                 </button>
