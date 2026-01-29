@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400;
+  }
+
+  .btn-primary {
+    @apply border-slate-900 bg-slate-900 text-white hover:bg-slate-800;
+  }
+
+  .btn-icon {
+    @apply h-9 w-9 p-0;
+  }
+}
+
+/* Tiptap editor with minimal prose styling */
+.tiptap {
+  line-height: 1.6;
+}
+
+.tiptap p {
+  margin: 0.5rem 0;
+}
+
+.tiptap li > p {
+  margin: 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  margin: 0.5rem 0 0.5rem 1.25rem;
+}
+
+.tiptap li {
+  margin: 0.125rem 0;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-weight: 700;
+}
+
+.tiptap h1:first-child,
+.tiptap h2:first-child,
+.tiptap h3:first-child,
+.tiptap p:first-child {
+  margin-top: 0;
+}
+
+.tiptap blockquote {
+  margin: 0.5rem 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid rgb(148 163 184 / 0.6);
+}
+
+.tiptap pre {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  background: rgb(241 245 249);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.tiptap hr {
+  margin: 1rem 0;
+  border-color: rgb(203 213 225);
+}
+
+/* Toolbar icons */
+#toolbar button svg {
+  display: block;
+  margin: auto;
+}
