@@ -1,11 +1,7 @@
-.PHONY: dev css seed
+.PHONY: dev css
 
 dev:
-	air
+	go run ./src
 
 css:
 	npx tailwindcss -i ./css/input.css -o ./static/generated.css --watch
-
-seed:
-	mkdir -p data
-	sqlite3 data/content.db < seed.sql

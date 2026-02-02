@@ -8,7 +8,6 @@ This repo uses `mise` to pin tool versions. If you don't use `mise`, make sure y
 
 - Go (1.25.x)
 - Node.js (25.x)
-- Air (1.64.x)
 
 Node modules are only used for Tailwind tooling and for bundling/copying vendor packages into `static/vendor`.
 
@@ -36,6 +35,9 @@ Other than that pre-bundling, no build step for JS, or runtime dependencies.
 
 ## Make Commands
 
-- `make dev` -> runs the Go server with live reload (air)
+- `make dev` -> runs the Go server (`./src`)
 - `make css` -> watches and rebuilds Tailwind CSS
-- `make seed` -> seeds SQLite content from `seed.sql`
+
+## Go Layout
+
+Go source files live in `src`.
