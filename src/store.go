@@ -17,7 +17,7 @@ func newContentStore() *contentStore {
 	}
 }
 
-func loadContent(store *contentStore, clientID string) (string, error) {
+func (store *contentStore) loadContent(clientID string) (string, error) {
 	store.mu.RLock()
 	content, ok := store.items[clientID]
 	store.mu.RUnlock()
@@ -27,7 +27,7 @@ func loadContent(store *contentStore, clientID string) (string, error) {
 	return seedContent, nil
 }
 
-func saveContent(store *contentStore, clientID string, html string) {
+func (store *contentStore) saveContent(clientID string, html string) {
 	store.mu.Lock()
 	store.items[clientID] = html
 	store.mu.Unlock()

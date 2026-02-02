@@ -4,6 +4,7 @@
     "bundle:tiptap": "esbuild scripts/tiptap-bundle.js --bundle --format=esm --platform=browser --outfile=static/vendor/tiptap.js"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@tiptap/core": "^3.18.0",
     "@tiptap/extension-code-block": "^3.18.0",
@@ -15,8 +16,5 @@
     "js-beautify": "^1.15.4",
     "lucide-static": "^0.563.0",
     "tailwindcss": "4.1.18"
-  },
-  "dependencies": {
-    "@tailwindcss/cli": "^4.1.18"
   }
 }
