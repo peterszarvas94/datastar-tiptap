@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -27,7 +28,7 @@ func main() {
 		}
 
 		return templates.ExecuteTemplate(c.Response().Writer, "index", map[string]any{
-			"ContentPreview":  content,
+			"RawPreview":      content,
 			"RenderedPreview": template.HTML(content),
 		})
 	})
@@ -43,11 +44,10 @@ func main() {
 		}
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-
-		err = updateUI(sse, content)
-		if err != nil {
-			return err
-		}
+		sse.PatchElements(content,
+			datastar.WithSelector("#editor > div"),
+			datastar.WithMode(datastar.ElementPatchModeInner),
+		)
 
 		return nil
 	})
@@ -57,7 +57,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		// patch
+
 		var signals SaveSignals
 		err = datastar.ReadSignals(c.Request(), &signals)
 		if err != nil {
@@ -67,13 +67,8 @@ func main() {
 		content := trimTrailingP(signals.EditorHTML)
 		store.saveContent(clientID, content)
 
-		// update ui
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-
-		err = updateUI(sse, content)
-		if err != nil {
-			return err
-		}
+		sse.PatchSignals(fmt.Appendf(nil, `{"rawPreview": "%s"}`, stripNewlines(content)))
 
 		return nil
 	})
