@@ -15,6 +15,7 @@ It uses importmaps with pre-bundled static files.
 - Datastar source copied from a CDN, already ESM
 - Tiptap editor pre-built into ESM
 - JS-beautify pre-built into ESM
+- entry point: `static/main.js`
 
 Bundle commands:
 
@@ -22,3 +23,9 @@ Bundle commands:
 - `npm run bundle:js-beautify` -> `static/vendor/js-beautify.js`
 
 Other than that pre-bundling, no build step for JS, or runtime dependencies.
+
+## Make Commands
+
+- `make dev` -> runs the Go server with live reload (air)
+- `make css` -> watches and rebuilds Tailwind CSS
+- `make seed` -> seeds SQLite content from `seed.sql`

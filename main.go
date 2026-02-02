@@ -49,15 +49,6 @@ func main() {
 
 	e := echo.New()
 	e.Renderer = renderer
-	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			if c.Request().URL.Path == "/static/vendor/tiptap.bundle.js" {
-				c.Response().Header().Set("Cache-Control", "public, max-age=31536000, immutable")
-			}
-			return next(c)
-		}
-	})
-
 	e.Static("/static", "static")
 
 	e.GET("/", func(c echo.Context) error {
@@ -66,8 +57,8 @@ func main() {
 			return err
 		}
 		return renderTemplate(c, "index", map[string]any{
-			"ContentHTML":  content,
-			"RenderedHTML": template.HTML(content),
+			"ContentPreview":  content,
+			"RenderedPreview": template.HTML(content),
 		})
 	})
 
