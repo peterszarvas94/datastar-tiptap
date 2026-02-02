@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -13,12 +12,6 @@ func main() {
 
 	e := echo.New()
 	e.Static("/static", "static")
-
-	// var templates = template.Must(template.ParseGlob("templates/*.html"))
-	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("templates/*.html")),
-	}
-	e.Renderer = renderer
 
 	e.GET("/", func(c echo.Context) error {
 		return renderTemplate(c, "index", map[string]any{})
@@ -42,7 +35,7 @@ func main() {
 			datastar.WithMode(datastar.ElementPatchModeInner),
 		)
 
-		updateContentPreviews(c, sse, rawContent)
+		updateContentPreviews(sse, rawContent)
 
 		return nil
 	})
@@ -66,7 +59,7 @@ func main() {
 		store.saveContent(clientID, rawContent)
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-		updateContentPreviews(c, sse, rawContent)
+		updateContentPreviews(sse, rawContent)
 
 		return nil
 	})

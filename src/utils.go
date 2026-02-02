@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"strings"
@@ -9,8 +10,9 @@ import (
 	"github.com/starfederation/datastar-go/datastar"
 )
 
-func trimTrailingP(html string) string {
+var templates = template.Must(template.ParseGlob("templates/*.html"))
 
+func trimTrailingP(html string) string {
 	return strings.TrimSuffix(html, "<p></p>")
 }
 
@@ -18,12 +20,12 @@ func stripNewlines(html string) string {
 	return strings.ReplaceAll(html, "\n", "")
 }
 
-func updateContentPreviews(c echo.Context, sse *datastar.ServerSentEventGenerator, content string) error {
+func updateContentPreviews(sse *datastar.ServerSentEventGenerator, content string) error {
 	// raw
 	sse.PatchSignals(fmt.Appendf(nil, `{"rawPreview": "%s"}`, stripNewlines(content)))
 
 	// rendered
-	renderedPreview, err := renderTemplateFragment(c, "rendered-preview", map[string]any{
+	renderedPreview, err := getTemplateFragment("rendered-preview", map[string]any{
 		"RenderedPreview": template.HTML(content),
 	})
 	if err != nil {
@@ -32,4 +34,18 @@ func updateContentPreviews(c echo.Context, sse *datastar.ServerSentEventGenerato
 	sse.PatchElements(renderedPreview)
 
 	return nil
+}
+
+func getTemplateFragment(templateName string, data any) (string, error) {
+	var buf bytes.Buffer
+	err := templates.ExecuteTemplate(&buf, templateName, data)
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
+}
+
+func renderTemplate(c echo.Context, templateName string, data any) error {
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTMLCharsetUTF8)
+	return templates.ExecuteTemplate(c.Response().Writer, templateName, data)
 }
