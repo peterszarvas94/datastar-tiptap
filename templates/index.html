@@ -9,9 +9,9 @@
     <script type="importmap">
       {
         "imports": {
-          "js-beautify": "/static/vendor/js-beautify/index.js",
-          "tiptap-bundle": "/static/vendor/tiptap.bundle.js",
-          "datastar": "/static/vendor/datastar/datastar.js"
+          "js-beautify": "/static/vendor/js-beautify.js",
+          "tiptap-bundle": "/static/vendor/tiptap.js",
+          "datastar": "/static/vendor/datastar.js"
         }
       }
     </script>
@@ -20,14 +20,10 @@
   <body
     class="min-h-screen"
     data-signals="{editorHtml: '', contentPreview: 'test'}"
-    data-on:load__window="@get('/content')"
   >
     <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
       <header class="space-y-2">
-        <h1 class="text-3xl font-bold">{{.Title}}</h1>
-        <p class="text-base-content/70">
-          Tiptap editor with a minimal server-backed workspace.
-        </p>
+        <h1 class="text-3xl font-bold">Datastar with Tiptap</h1>
       </header>
 
       <section class="card shadow-soft">
@@ -40,12 +36,33 @@
               <div
                 id="toolbar"
                 class="flex flex-wrap gap-1 border-b border-base-300 bg-base-200 p-3"
+                data-signals="{ bold: false, italic: false, underline: false, strike: false, paragraph: true, heading1: false, heading2: false, heading3: false, bulletList: false, orderedList: false, blockquote: false, codeBlock: false }"
+                data-on:editorupdate__window="
+                  $bold = editor.isActive('bold');
+                  $italic = editor.isActive('italic');
+                  $underline = editor.isActive('underline');
+                  $strike = editor.isActive('strike');
+                  $paragraph =
+                    editor.isActive('paragraph') &&
+                    !editor.isActive('bulletList') &&
+                    !editor.isActive('orderedList') &&
+                    !editor.isActive('blockquote') &&
+                    !editor.isActive('codeBlock');
+                  $heading1 = editor.isActive('heading', { level: 1 });
+                  $heading2 = editor.isActive('heading', { level: 2 });
+                  $heading3 = editor.isActive('heading', { level: 3 });
+                  $bulletList = editor.isActive('bulletList');
+                  $orderedList = editor.isActive('orderedList');
+                  $blockquote = editor.isActive('blockquote');
+                  $codeBlock = editor.isActive('codeBlock');
+                "
               >
                 <button
                   id="btn-bold"
                   title="Bold (Ctrl+B)"
                   class="btn btn-sm btn-square"
-                  data-on:click="window.editor.chain().focus().toggleBold().run()"
+                  data-on:click="editor.chain().focus().toggleBold().run()"
+                  data-class:btn-secondary="$bold"
                 >
                   <svg width="16" height="16"><use href="#bold" /></svg>
                 </button>
@@ -54,14 +71,25 @@
                   title="Italic (Ctrl+I)"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleItalic().run()"
+                  data-class:btn-secondary="$italic"
                 >
                   <svg width="16" height="16"><use href="#italic" /></svg>
+                </button>
+                <button
+                  id="btn-underline"
+                  title="Underline (Ctrl+U)"
+                  class="btn btn-sm btn-square"
+                  data-on:click="editor.chain().focus().toggleUnderline().run()"
+                  data-class:btn-secondary="$underline"
+                >
+                  <svg width="16" height="16"><use href="#underline" /></svg>
                 </button>
                 <button
                   id="btn-strike"
                   title="Strikethrough"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleStrike().run()"
+                  data-class:btn-secondary="$strike"
                 >
                   <svg width="16" height="16">
                     <use href="#strikethrough" />
@@ -73,6 +101,7 @@
                   title="Paragraph"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().setParagraph().run()"
+                  data-class:btn-secondary="$paragraph"
                 >
                   <svg width="16" height="16"><use href="#paragraph" /></svg>
                 </button>
@@ -81,6 +110,7 @@
                   title="Heading 1"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+                  data-class:btn-secondary="$heading1"
                 >
                   <svg width="16" height="16"><use href="#heading-1" /></svg>
                 </button>
@@ -89,6 +119,7 @@
                   title="Heading 2"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+                  data-class:btn-secondary="$heading2"
                 >
                   <svg width="16" height="16"><use href="#heading-2" /></svg>
                 </button>
@@ -97,6 +128,7 @@
                   title="Heading 3"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+                  data-class:btn-secondary="$heading3"
                 >
                   <svg width="16" height="16"><use href="#heading-3" /></svg>
                 </button>
@@ -106,6 +138,7 @@
                   title="Bullet List"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleBulletList().run()"
+                  data-class:btn-secondary="$bulletList"
                 >
                   <svg width="16" height="16"><use href="#list" /></svg>
                 </button>
@@ -114,6 +147,7 @@
                   title="Numbered List"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleOrderedList().run()"
+                  data-class:btn-secondary="$orderedList"
                 >
                   <svg width="16" height="16"><use href="#list-ordered" /></svg>
                 </button>
@@ -123,6 +157,7 @@
                   title="Blockquote"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleBlockquote().run()"
+                  data-class:btn-secondary="$blockquote"
                 >
                   <svg width="16" height="16"><use href="#quote" /></svg>
                 </button>
@@ -131,6 +166,7 @@
                   title="Code Block"
                   class="btn btn-sm btn-square"
                   data-on:click="editor.chain().focus().toggleCodeBlock().run()"
+                  data-class:btn-secondary="$codeBlock"
                 >
                   <svg width="16" height="16"><use href="#code" /></svg>
                 </button>
@@ -165,7 +201,7 @@
             </div>
           </div>
 
-          <div class="card shadow-sm">
+          <div class="card shadow-sm" data-init="@get('/content')">
             <div class="card-body">
               <div class="flex items-center justify-between">
                 <h3 class="text-base font-semibold">Stored HTML</h3>
@@ -235,6 +271,18 @@
         <line x1="19" x2="10" y1="4" y2="4" />
         <line x1="14" x2="5" y1="20" y2="20" />
         <line x1="15" x2="9" y1="4" y2="20" />
+      </symbol>
+      <symbol
+        id="underline"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M6 4v6a6 6 0 0 0 12 0V4" />
+        <line x1="4" x2="20" y1="20" y2="20" />
       </symbol>
       <symbol
         id="strikethrough"

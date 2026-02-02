@@ -66,7 +66,6 @@ func main() {
 			return err
 		}
 		return renderTemplate(c, "index", map[string]any{
-			"Title":        "Datastar + Tiptap",
 			"ContentHTML":  content,
 			"RenderedHTML": template.HTML(content),
 		})

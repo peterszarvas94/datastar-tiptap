@@ -6924,6 +6924,9 @@
   .flex-shrink {
     flex-shrink: 1;
   }
+  .shrink {
+    flex-shrink: 1;
+  }
   .flex-grow {
     flex-grow: 1;
   }
@@ -6932,6 +6935,9 @@
   }
   .border-collapse {
     border-collapse: collapse;
+  }
+  .scale-3d {
+    scale: var(--tw-scale-x) var(--tw-scale-y) var(--tw-scale-z);
   }
   .swap-rotate {
     @layer daisyui.l1.l2 {
@@ -7056,6 +7062,15 @@
         scroll-snap-align: start;
       }
     }
+  }
+  .columns-2 {
+    columns: 2;
+  }
+  .columns-3 {
+    columns: 3;
+  }
+  .columns-4 {
+    columns: 4;
   }
   .alert-horizontal {
     @layer daisyui.l1.l2 {
@@ -9629,6 +9644,14 @@
       }
     }
   }
+  .data-class\:btn-secondary {
+    &[data-class] {
+      @layer daisyui.l1.l2.l3 {
+        --btn-color: var(--color-secondary);
+        --btn-fg: var(--color-secondary-content);
+      }
+    }
+  }
 }
 .tiptap {
   color: var(--tw-prose-body);
@@ -10390,6 +10413,21 @@
     background-position-x: -115%;
   }
 }
+@property --tw-scale-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-scale-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-scale-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
 @property --tw-rotate-x {
   syntax: "*";
   inherits: false;
@@ -10610,6 +10648,9 @@
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      --tw-scale-z: 1;
       --tw-rotate-x: initial;
       --tw-rotate-y: initial;
       --tw-rotate-z: initial;

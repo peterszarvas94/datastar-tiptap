@@ -1,13 +1,10 @@
-AIR ?= air
-NPX ?= npx
-
 .PHONY: dev css seed
 
 dev:
-	$(AIR)
+	air
 
 css:
-	$(NPX) tailwindcss -i ./css/input.css -o ./static/generated.css --watch
+	npx tailwindcss -i ./css/input.css -o ./static/generated.css --watch
 
 seed:
 	mkdir -p data
