@@ -2,6 +2,16 @@
 
 Minimal setup, intended for copy and pasting to other projects.
 
+## Tooling
+
+This repo uses `mise` to pin tool versions. If you don't use `mise`, make sure you have these installed:
+
+- Go (1.25.x)
+- Node.js (25.x)
+- Air (1.64.x)
+
+Node modules are only used for Tailwind tooling and for bundling/copying vendor packages into `static/vendor`.
+
 ## Frontend
 
 ### CSS
