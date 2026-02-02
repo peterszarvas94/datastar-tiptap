@@ -1,6 +1,7 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@import "tailwindcss" source("..");
 @plugin "@tailwindcss/typography";
+@plugin "daisyui";
+@source inline("btn-secondary");
 
 /* Tiptap editor with prose styling */
 .tiptap {
@@ -48,10 +49,6 @@
 
 .tiptap hr {
   @apply my-4;
-}
-
-.tiptap div[contenteditable="true"] {
-  @apply bg-base-200 p-2 rounded-lg;
 }
 
 /* Toolbar icons */

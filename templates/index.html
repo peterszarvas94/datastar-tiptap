@@ -1,6 +1,6 @@
 {{define "index"}}
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <title>Datastar with Tiptap</title>
     <meta charset="utf-8" />
@@ -21,11 +21,19 @@
     class="min-h-screen"
     data-signals="{editorHtml: '', rawPreview: ''}"
     data-on:load__window="@get('/content')"
-    data-theme="light"
   >
     <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
-      <header class="space-y-2">
+      <header class="flex items-center justify-between space-y-2">
         <h1 class="text-3xl font-bold">Datastar with Tiptap</h1>
+        <label class="flex cursor-pointer items-center gap-2">
+          <svg width="16" height="16"><use href="#moon" /></svg>
+          <input
+            type="checkbox"
+            value="light"
+            class="toggle theme-controller"
+          />
+          <svg width="16" height="16"><use href="#sun" /></svg>
+        </label>
       </header>
 
       <div class="card shadow-sm">
@@ -466,6 +474,36 @@
       >
         <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
         <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </symbol>
+      <symbol
+        id="moon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 3a6.5 6.5 0 1 0 9 9 9 9 0 1 1-9-9" />
+      </symbol>
+      <symbol
+        id="sun"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
       </symbol>
     </svg>
   </body>
