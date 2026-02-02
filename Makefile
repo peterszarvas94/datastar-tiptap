@@ -1,7 +1,7 @@
 .PHONY: dev css
 
 dev:
-	go run ./src
+	air
 
 css:
 	npx tailwindcss -i ./css/input.css -o ./static/generated.css --watch

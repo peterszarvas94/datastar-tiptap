@@ -1,0 +1,15 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "mkdir -p ./tmp && go build -o ./tmp/app ./src"
+bin = "./tmp/app"
+include_ext = ["go", "html", "tmpl", "js", "css"]
+exclude_dir = ["node_modules", "tmp", "static/vendor"]
+exclude_regex = ["_test\\.go$"]
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true

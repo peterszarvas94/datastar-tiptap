@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -9,45 +8,41 @@ import (
 	"github.com/starfederation/datastar-go/datastar"
 )
 
-var templates = template.Must(template.ParseGlob("templates/*.html"))
-
 func main() {
 	store := newContentStore()
 
 	e := echo.New()
 	e.Static("/static", "static")
 
-	e.GET("/", func(c echo.Context) error {
-		clientID, err := ensureClientID(c)
-		if err != nil {
-			return err
-		}
-		content, err := store.loadContent(clientID)
-		if err != nil {
-			return err
-		}
+	// var templates = template.Must(template.ParseGlob("templates/*.html"))
+	renderer := &TemplateRenderer{
+		templates: template.Must(template.ParseGlob("templates/*.html")),
+	}
+	e.Renderer = renderer
 
-		return templates.ExecuteTemplate(c.Response().Writer, "index", map[string]any{
-			"RawPreview":      content,
-			"RenderedPreview": template.HTML(content),
-		})
+	e.GET("/", func(c echo.Context) error {
+		return renderTemplate(c, "index", map[string]any{})
 	})
 
 	e.GET("/content", func(c echo.Context) error {
 		clientID, err := ensureClientID(c)
 		if err != nil {
+
 			return err
 		}
-		content, err := store.loadContent(clientID)
+		rawContent, err := store.loadContent(clientID)
 		if err != nil {
+
 			return err
 		}
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-		sse.PatchElements(content,
+		sse.PatchElements(rawContent,
 			datastar.WithSelector("#editor > div"),
 			datastar.WithMode(datastar.ElementPatchModeInner),
 		)
+
+		updateContentPreviews(c, sse, rawContent)
 
 		return nil
 	})
@@ -55,20 +50,23 @@ func main() {
 	e.PATCH("/content", func(c echo.Context) error {
 		clientID, err := ensureClientID(c)
 		if err != nil {
+
 			return err
 		}
 
 		var signals SaveSignals
 		err = datastar.ReadSignals(c.Request(), &signals)
 		if err != nil {
+
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid signals"})
 		}
 
-		content := trimTrailingP(signals.EditorHTML)
-		store.saveContent(clientID, content)
+		rawContent := trimTrailingP(signals.EditorHTML)
+
+		store.saveContent(clientID, rawContent)
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-		sse.PatchSignals(fmt.Appendf(nil, `{"rawPreview": "%s"}`, stripNewlines(content)))
+		updateContentPreviews(c, sse, rawContent)
 
 		return nil
 	})

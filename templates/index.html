@@ -19,25 +19,22 @@
   </head>
   <body
     class="min-h-screen"
-    data-signals="{editorHtml: '', rawPreview: 'test'}"
+    data-signals="{editorHtml: '', rawPreview: ''}"
+    data-on:load__window="@get('/content')"
+    data-theme="light"
   >
     <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
       <header class="space-y-2">
         <h1 class="text-3xl font-bold">Datastar with Tiptap</h1>
       </header>
 
-      <section class="card shadow-soft">
-        <div class="card-body space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-lg font-semibold">Editor</h2>
-          </div>
-          <div class="card shadow-sm">
-            <div class="card-body p-0">
-              <div
-                id="toolbar"
-                class="flex flex-wrap gap-1 border-b border-base-300 bg-base-200 p-3"
-                data-signals="{ bold: false, italic: false, underline: false, strike: false, paragraph: true, heading1: false, heading2: false, heading3: false, bulletList: false, orderedList: false, blockquote: false, codeBlock: false }"
-                data-on:editorupdate__window="
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div
+            id="toolbar"
+            class="flex flex-wrap gap-1"
+            data-signals="{ bold: false, italic: false, underline: false, strike: false, paragraph: true, heading1: false, heading2: false, heading3: false, bulletList: false, orderedList: false, blockquote: false, codeBlock: false }"
+            data-on:editorupdate__window="
                   $bold = editor.isActive('bold');
                   $italic = editor.isActive('italic');
                   $underline = editor.isActive('underline');
@@ -56,195 +53,188 @@
                   $blockquote = editor.isActive('blockquote');
                   $codeBlock = editor.isActive('codeBlock');
                 "
-              >
-                <button
-                  id="btn-bold"
-                  title="Bold (Ctrl+B)"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleBold().run()"
-                  data-class:btn-secondary="$bold"
-                >
-                  <svg width="16" height="16"><use href="#bold" /></svg>
-                </button>
-                <button
-                  id="btn-italic"
-                  title="Italic (Ctrl+I)"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleItalic().run()"
-                  data-class:btn-secondary="$italic"
-                >
-                  <svg width="16" height="16"><use href="#italic" /></svg>
-                </button>
-                <button
-                  id="btn-underline"
-                  title="Underline (Ctrl+U)"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleUnderline().run()"
-                  data-class:btn-secondary="$underline"
-                >
-                  <svg width="16" height="16"><use href="#underline" /></svg>
-                </button>
-                <button
-                  id="btn-strike"
-                  title="Strikethrough"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleStrike().run()"
-                  data-class:btn-secondary="$strike"
-                >
-                  <svg width="16" height="16">
-                    <use href="#strikethrough" />
-                  </svg>
-                </button>
-                <span class="mx-1 h-7 w-px bg-base-300"></span>
-                <button
-                  id="btn-paragraph"
-                  title="Paragraph"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().setParagraph().run()"
-                  data-class:btn-secondary="$paragraph"
-                >
-                  <svg width="16" height="16"><use href="#paragraph" /></svg>
-                </button>
-                <button
-                  id="btn-h1"
-                  title="Heading 1"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-                  data-class:btn-secondary="$heading1"
-                >
-                  <svg width="16" height="16"><use href="#heading-1" /></svg>
-                </button>
-                <button
-                  id="btn-h2"
-                  title="Heading 2"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-                  data-class:btn-secondary="$heading2"
-                >
-                  <svg width="16" height="16"><use href="#heading-2" /></svg>
-                </button>
-                <button
-                  id="btn-h3"
-                  title="Heading 3"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-                  data-class:btn-secondary="$heading3"
-                >
-                  <svg width="16" height="16"><use href="#heading-3" /></svg>
-                </button>
-                <span class="mx-1 h-7 w-px bg-base-300"></span>
-                <button
-                  id="btn-bullet"
-                  title="Bullet List"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleBulletList().run()"
-                  data-class:btn-secondary="$bulletList"
-                >
-                  <svg width="16" height="16"><use href="#list" /></svg>
-                </button>
-                <button
-                  id="btn-ordered"
-                  title="Numbered List"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleOrderedList().run()"
-                  data-class:btn-secondary="$orderedList"
-                >
-                  <svg width="16" height="16"><use href="#list-ordered" /></svg>
-                </button>
-                <span class="mx-1 h-7 w-px bg-base-300"></span>
-                <button
-                  id="btn-blockquote"
-                  title="Blockquote"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleBlockquote().run()"
-                  data-class:btn-secondary="$blockquote"
-                >
-                  <svg width="16" height="16"><use href="#quote" /></svg>
-                </button>
-                <button
-                  id="btn-code"
-                  title="Code Block"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().toggleCodeBlock().run()"
-                  data-class:btn-secondary="$codeBlock"
-                >
-                  <svg width="16" height="16"><use href="#code" /></svg>
-                </button>
-                <span class="mx-1 h-7 w-px bg-base-300"></span>
-                <button
-                  id="btn-undo"
-                  title="Undo (Ctrl+Z)"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().undo().run()"
-                >
-                  <svg width="16" height="16"><use href="#undo" /></svg>
-                </button>
-                <button
-                  id="btn-redo"
-                  title="Redo (Ctrl+Shift+Z)"
-                  class="btn btn-sm btn-square"
-                  data-on:click="editor.chain().focus().redo().run()"
-                >
-                  <svg width="16" height="16"><use href="#redo" /></svg>
-                </button>
-                <span class="mx-1 h-7 w-px bg-base-300"></span>
-                <button
-                  id="btn-save"
-                  title="Save"
-                  class="btn btn-sm btn-primary"
-                  data-on:click="$editorHtml = beautify(editor.getHTML(), { indent_size: 2 }); @patch('/content')"
-                >
-                  <svg width="16" height="16"><use href="#save" /></svg>
-                </button>
-              </div>
-              <div id="editor" class="min-h-90 p-6"></div>
-            </div>
+          >
+            <button
+              id="btn-bold"
+              title="Bold (Ctrl+B)"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleBold().run()"
+              data-class:btn-secondary="$bold"
+            >
+              <svg width="16" height="16"><use href="#bold" /></svg>
+            </button>
+            <button
+              id="btn-italic"
+              title="Italic (Ctrl+I)"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleItalic().run()"
+              data-class:btn-secondary="$italic"
+            >
+              <svg width="16" height="16"><use href="#italic" /></svg>
+            </button>
+            <button
+              id="btn-underline"
+              title="Underline (Ctrl+U)"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleUnderline().run()"
+              data-class:btn-secondary="$underline"
+            >
+              <svg width="16" height="16"><use href="#underline" /></svg>
+            </button>
+            <button
+              id="btn-strike"
+              title="Strikethrough"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleStrike().run()"
+              data-class:btn-secondary="$strike"
+            >
+              <svg width="16" height="16">
+                <use href="#strikethrough" />
+              </svg>
+            </button>
+            <span class="mx-1 h-8 w-px bg-base-300"></span>
+            <button
+              id="btn-paragraph"
+              title="Paragraph"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().setParagraph().run()"
+              data-class:btn-secondary="$paragraph"
+            >
+              <svg width="16" height="16"><use href="#paragraph" /></svg>
+            </button>
+            <button
+              id="btn-h1"
+              title="Heading 1"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+              data-class:btn-secondary="$heading1"
+            >
+              <svg width="16" height="16"><use href="#heading-1" /></svg>
+            </button>
+            <button
+              id="btn-h2"
+              title="Heading 2"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+              data-class:btn-secondary="$heading2"
+            >
+              <svg width="16" height="16"><use href="#heading-2" /></svg>
+            </button>
+            <button
+              id="btn-h3"
+              title="Heading 3"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+              data-class:btn-secondary="$heading3"
+            >
+              <svg width="16" height="16"><use href="#heading-3" /></svg>
+            </button>
+            <span class="mx-1 h-8 w-px bg-base-300"></span>
+            <button
+              id="btn-bullet"
+              title="Bullet List"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleBulletList().run()"
+              data-class:btn-secondary="$bulletList"
+            >
+              <svg width="16" height="16"><use href="#list" /></svg>
+            </button>
+            <button
+              id="btn-ordered"
+              title="Numbered List"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleOrderedList().run()"
+              data-class:btn-secondary="$orderedList"
+            >
+              <svg width="16" height="16"><use href="#list-ordered" /></svg>
+            </button>
+            <span class="mx-1 h-8 w-px bg-base-300"></span>
+            <button
+              id="btn-blockquote"
+              title="Blockquote"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleBlockquote().run()"
+              data-class:btn-secondary="$blockquote"
+            >
+              <svg width="16" height="16"><use href="#quote" /></svg>
+            </button>
+            <button
+              id="btn-code"
+              title="Code Block"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().toggleCodeBlock().run()"
+              data-class:btn-secondary="$codeBlock"
+            >
+              <svg width="16" height="16"><use href="#code" /></svg>
+            </button>
+            <span class="mx-1 h-8 w-px bg-base-300"></span>
+            <button
+              id="btn-undo"
+              title="Undo (Ctrl+Z)"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().undo().run()"
+            >
+              <svg width="16" height="16"><use href="#undo" /></svg>
+            </button>
+            <button
+              id="btn-redo"
+              title="Redo (Ctrl+Shift+Z)"
+              class="btn btn-sm btn-square"
+              data-on:click="editor.chain().focus().redo().run()"
+            >
+              <svg width="16" height="16"><use href="#redo" /></svg>
+            </button>
+            <span class="mx-1 h-8 w-px bg-base-300"></span>
+            <button
+              id="btn-save"
+              title="Save"
+              class="btn btn-sm btn-square btn-primary"
+              data-on:click="$editorHtml = beautify(editor.getHTML(), { indent_size: 2 }); @patch('/content')"
+            >
+              <svg width="16" height="16"><use href="#save" /></svg>
+            </button>
           </div>
-
-          <div class="card shadow-sm" data-init="@get('/content')">
-            <div class="card-body">
-              <div class="flex items-center justify-between">
-                <h3 class="text-base font-semibold">Stored Content (raw)</h3>
-                <button
-                  id="btn-copy"
-                  title="Copy to clipboard"
-                  class="btn btn-sm btn-square"
-                  data-on:click="navigator.clipboard.writeText($editorHtml)"
-                >
-                  <svg width="16" height="16"><use href="#copy" /></svg>
-                </button>
-              </div>
-              {{block "raw-preview" .}}
-              <pre
-                id="db-preview"
-                class="rounded-xl bg-base-200 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
-                data-on:click="navigator.clipboard.writeText($rawPreview)"
-                data-text="beautify($rawPreview, { indent_size: 2 })"
-              >
- {{.RawPreview}}
-              </pre>
-              {{end}}
-            </div>
-          </div>
-
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h3 class="text-base font-semibold">Stored Content (rendered)</h3>
-              {{block "rendered-preview" .}}
-              <div
-                id="rendered-preview"
-                class="tiptap rounded-xl bg-base-200 p-6"
-              >
-                {{.RenderedPreview}}
-              </div>
-              {{end}}
-            </div>
-          </div>
+          <div id="editor" class="rounded-xl bg-base-200 p-4"></div>
         </div>
-      </section>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-semibold">Stored Content (raw)</h3>
+            <button
+              id="btn-copy"
+              title="Copy to clipboard"
+              class="btn btn-sm btn-square"
+              data-on:click="navigator.clipboard.writeText($editorHtml)"
+            >
+              <svg width="16" height="16"><use href="#copy" /></svg>
+            </button>
+          </div>
+          {{block "raw-preview" .}}
+          <pre
+            id="db-preview"
+            class="rounded-xl bg-base-200 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
+            data-on:click="navigator.clipboard.writeText($rawPreview)"
+            data-text="beautify($rawPreview, { indent_size: 2 })"
+          ></pre>
+          {{end}}
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="text-base font-semibold">Stored Content (rendered)</h3>
+          {{block "rendered-preview" .}}
+          <div id="rendered-preview" class="tiptap rounded-xl bg-base-200 p-4">
+            {{.RenderedPreview}}
+          </div>
+          {{end}}
+        </div>
+      </div>
     </div>
 
-    <!-- SVG icon sprite - copied from lucide-static v0.563.0 (ISC license) -->
+    <!-- lucide static icons -->
     <svg style="display: none" xmlns="http://www.w3.org/2000/svg">
       <symbol
         id="bold"
