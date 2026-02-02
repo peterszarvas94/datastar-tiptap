@@ -2954,6 +2954,12 @@
 .tiptap hr {
   margin-block: calc(var(--spacing) * 4);
 }
+.tiptap u {
+  text-decoration: underline;
+}
+.tiptap s, .tiptap del {
+  text-decoration: line-through;
+}
 #toolbar button svg {
   display: block;
   margin: auto;

@@ -9,6 +9,8 @@
     "@tiptap/core": "^3.18.0",
     "@tiptap/extension-code-block": "^3.18.0",
     "@tiptap/extension-code-block-lowlight": "^3.18.0",
+    "@tiptap/extension-strike": "^3.18.0",
+    "@tiptap/extension-underline": "^3.18.0",
     "@tiptap/pm": "^3.18.0",
     "@tiptap/starter-kit": "^3.18.0",
     "daisyui": "^5.5.16",

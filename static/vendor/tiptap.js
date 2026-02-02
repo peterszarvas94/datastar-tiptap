@@ -22311,8 +22311,9 @@ var StarterKit = Extension.create({
     return extensions;
   }
 });
-var index_default = StarterKit;
 export {
   Editor,
-  index_default as StarterKit
+  StarterKit,
+  Strike,
+  Underline
 };

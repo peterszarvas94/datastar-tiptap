@@ -1,11 +1,11 @@
 import "datastar";
-import { Editor, StarterKit } from "tiptap-bundle";
+import { Editor, StarterKit, Strike, Underline } from "tiptap-bundle";
 import jsBeautify from "js-beautify";
 
 // Initialize editor
 const editor = new Editor({
   element: document.querySelector("#editor"),
-  extensions: [StarterKit.configure({ underline: true })],
+  extensions: [StarterKit.configure({ strike: false }), Strike, Underline],
   content: "", // backend fills this
   onUpdate: () => {
     window.dispatchEvent(new CustomEvent("editorupdate"));

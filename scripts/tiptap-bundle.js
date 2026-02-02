@@ -7,3 +7,5 @@
 // - Rebuild with: npm run bundle:tiptap (or npm run bundle:vendor).
 export { Editor } from "@tiptap/core";
 export { StarterKit } from "@tiptap/starter-kit";
+export { Strike } from "@tiptap/extension-strike";
+export { Underline } from "@tiptap/extension-underline";
