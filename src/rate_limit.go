@@ -6,43 +6,37 @@ import (
 )
 
 type rateLimiter struct {
-	mu      sync.Mutex
-	max     int
-	window  time.Duration
-	entries map[string]*rateLimitEntry
-}
-
-type rateLimitEntry struct {
-	count int
-	reset time.Time
+	mu     sync.Mutex
+	max    int
+	window time.Duration
+	count  int
+	reset  time.Time
+	active bool
 }
 
 func newRateLimiter(max int, window time.Duration) *rateLimiter {
 	return &rateLimiter{
-		max:     max,
-		window:  window,
-		entries: make(map[string]*rateLimitEntry),
+		max:    max,
+		window: window,
 	}
 }
 
-func (rl *rateLimiter) Allow(key string) bool {
+func (rl *rateLimiter) Allow() bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
 	now := time.Now()
-	entry, ok := rl.entries[key]
-	if !ok || now.After(entry.reset) {
-		rl.entries[key] = &rateLimitEntry{
-			count: 1,
-			reset: now.Add(rl.window),
-		}
+	if !rl.active || now.After(rl.reset) {
+		rl.count = 1
+		rl.reset = now.Add(rl.window)
+		rl.active = true
 		return true
 	}
 
-	if entry.count >= rl.max {
+	if rl.count >= rl.max {
 		return false
 	}
 
-	entry.count++
+	rl.count++
 	return true
 }

@@ -13,10 +13,18 @@ import (
 func main() {
 	_ = godotenv.Load()
 	basePath := normalizeBasePath(os.Getenv("BASE_PATH"))
-	readLimiter := newRateLimiter(60, time.Minute)
-	writeLimiter := newRateLimiter(20, time.Minute)
+	clientTTL := time.Hour
+	cleanupInterval := 10 * time.Minute
+	requestLimiter := newRateLimiter(60, time.Minute)
 
 	store := newContentStore()
+	go func() {
+		ticker := time.NewTicker(cleanupInterval)
+		defer ticker.Stop()
+		for range ticker.C {
+			store.pruneExpired(clientTTL)
+		}
+	}()
 
 	e := echo.New()
 	e.Static("/static", "static")
@@ -33,7 +41,7 @@ func main() {
 
 			return err
 		}
-		if !readLimiter.Allow(clientID) {
+		if !requestLimiter.Allow() {
 			return c.JSON(http.StatusTooManyRequests, map[string]string{"error": "Rate limit exceeded"})
 		}
 		rawContent, err := store.loadContent(clientID)
@@ -59,7 +67,7 @@ func main() {
 
 			return err
 		}
-		if !writeLimiter.Allow(clientID) {
+		if !requestLimiter.Allow() {
 			return c.JSON(http.StatusTooManyRequests, map[string]string{"error": "Rate limit exceeded"})
 		}
 
