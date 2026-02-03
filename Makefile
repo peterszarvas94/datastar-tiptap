@@ -1,7 +1,4 @@
-.PHONY: dev css
+.PHONY: dev
 
 dev:
-	air
-
-css:
-	npx tailwindcss -i ./css/input.css -o ./static/generated.css --watch
+	air & npx tailwindcss -i ./css/input.css -o ./static/generated.css --watch

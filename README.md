@@ -35,8 +35,7 @@ Other than that pre-bundling, no build step for JS, or runtime dependencies.
 
 ## Make Commands
 
-- `make dev` -> runs the Go server (`./src`)
-- `make css` -> watches and rebuilds Tailwind CSS
+- `make dev` -> runs `air` plus the Tailwind CSS watcher
 
 ## Go Layout
 

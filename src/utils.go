@@ -12,28 +12,12 @@ import (
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
 
-func trimTrailingP(html string) string {
+func trimTrailingParagraph(html string) string {
 	return strings.TrimSuffix(html, "<p></p>")
 }
 
 func stripNewlines(html string) string {
 	return strings.ReplaceAll(html, "\n", "")
-}
-
-func updateContentPreviews(sse *datastar.ServerSentEventGenerator, content string) error {
-	// raw
-	sse.PatchSignals(fmt.Appendf(nil, `{"rawPreview": "%s"}`, stripNewlines(content)))
-
-	// rendered
-	renderedPreview, err := getTemplateFragment("rendered-preview", map[string]any{
-		"RenderedPreview": template.HTML(content),
-	})
-	if err != nil {
-		return err
-	}
-	sse.PatchElements(renderedPreview)
-
-	return nil
 }
 
 func getTemplateFragment(templateName string, data any) (string, error) {
@@ -48,4 +32,20 @@ func getTemplateFragment(templateName string, data any) (string, error) {
 func renderTemplate(c echo.Context, templateName string, data any) error {
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTMLCharsetUTF8)
 	return templates.ExecuteTemplate(c.Response().Writer, templateName, data)
+}
+
+func sendContentPreviewUpdates(sse *datastar.ServerSentEventGenerator, content string) error {
+	// raw
+	sse.PatchSignals(fmt.Appendf(nil, `{"rawPreview": "%s"}`, stripNewlines(content)))
+
+	// rendered
+	renderedPreview, err := getTemplateFragment("rendered-preview", map[string]any{
+		"RenderedPreview": template.HTML(content),
+	})
+	if err != nil {
+		return err
+	}
+	sse.PatchElements(renderedPreview)
+
+	return nil
 }

@@ -35,7 +35,7 @@ func main() {
 			datastar.WithMode(datastar.ElementPatchModeInner),
 		)
 
-		updateContentPreviews(sse, rawContent)
+		sendContentPreviewUpdates(sse, rawContent)
 
 		return nil
 	})
@@ -54,15 +54,15 @@ func main() {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid signals"})
 		}
 
-		rawContent := trimTrailingP(signals.EditorHTML)
+		rawContent := trimTrailingParagraph(signals.EditorHTML)
 
 		store.saveContent(clientID, rawContent)
 
 		sse := datastar.NewSSE(c.Response().Writer, c.Request())
-		updateContentPreviews(sse, rawContent)
+		sendContentPreviewUpdates(sse, rawContent)
 
 		return nil
 	})
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":3000"))
 }
