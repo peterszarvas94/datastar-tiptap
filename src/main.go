@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -12,6 +13,8 @@ import (
 func main() {
 	_ = godotenv.Load()
 	basePath := normalizeBasePath(os.Getenv("BASE_PATH"))
+	readLimiter := newRateLimiter(60, time.Minute)
+	writeLimiter := newRateLimiter(20, time.Minute)
 
 	store := newContentStore()
 
@@ -29,6 +32,9 @@ func main() {
 		if err != nil {
 
 			return err
+		}
+		if !readLimiter.Allow(clientID) {
+			return c.JSON(http.StatusTooManyRequests, map[string]string{"error": "Rate limit exceeded"})
 		}
 		rawContent, err := store.loadContent(clientID)
 		if err != nil {
@@ -52,6 +58,9 @@ func main() {
 		if err != nil {
 
 			return err
+		}
+		if !writeLimiter.Allow(clientID) {
+			return c.JSON(http.StatusTooManyRequests, map[string]string{"error": "Rate limit exceeded"})
 		}
 
 		var signals SaveSignals
