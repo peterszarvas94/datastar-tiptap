@@ -2,19 +2,26 @@ package main
 
 import (
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/starfederation/datastar-go/datastar"
 )
 
 func main() {
+	_ = godotenv.Load()
+	basePath := normalizeBasePath(os.Getenv("BASE_PATH"))
+
 	store := newContentStore()
 
 	e := echo.New()
 	e.Static("/static", "static")
 
 	e.GET("/", func(c echo.Context) error {
-		return renderTemplate(c, "index", map[string]any{})
+		return renderTemplate(c, "index", map[string]any{
+			"BasePath": basePath,
+		})
 	})
 
 	e.GET("/content", func(c echo.Context) error {

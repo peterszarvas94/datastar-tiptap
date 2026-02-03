@@ -20,6 +20,18 @@ func stripNewlines(html string) string {
 	return strings.ReplaceAll(html, "\n", "")
 }
 
+func normalizeBasePath(basePath string) string {
+	trimmed := strings.TrimSpace(basePath)
+	if trimmed == "" || trimmed == "/" {
+		return ""
+	}
+	trimmed = strings.TrimSuffix(trimmed, "/")
+	if !strings.HasPrefix(trimmed, "/") {
+		trimmed = "/" + trimmed
+	}
+	return trimmed
+}
+
 func getTemplateFragment(templateName string, data any) (string, error) {
 	var buf bytes.Buffer
 	err := templates.ExecuteTemplate(&buf, templateName, data)

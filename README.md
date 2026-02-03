@@ -11,6 +11,8 @@ This repo uses `mise` to pin tool versions. If you don't use `mise`, make sure y
 
 Node modules are only used for Tailwind tooling and for bundling/copying vendor packages into `static/vendor`.
 
+The server loads environment variables from a local `.env` file (optional).
+
 ## Frontend
 
 ### CSS
@@ -36,6 +38,10 @@ Other than that pre-bundling, no build step for JS, or runtime dependencies.
 ## Make Commands
 
 - `make dev` -> runs `air` plus the Tailwind CSS watcher
+
+## Environment
+
+- `BASE_PATH` -> optional URL prefix (example: `/demo/datastar-tiptap`)
 
 ## Go Layout
 
