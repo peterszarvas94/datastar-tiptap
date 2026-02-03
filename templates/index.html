@@ -18,14 +18,15 @@
     <script type="module" src="/static/main.js"></script>
   </head>
   <body
-    class="min-h-screen"
+    class="min-h-screen flex flex-col lg:flex-row lg:gap-2"
     data-signals="{editorHtml: '', rawPreview: ''}"
     data-on:load__window="@get('/content')"
   >
-    <div class="mx-auto w-full max-w-5xl space-y-6 px-6 py-8">
+    <main class="mx-auto w-full space-y-6 px-6 pt-8 lg:pb-8">
       <header class="flex items-center justify-between space-y-2">
         <h1 class="text-3xl font-bold">Datastar with Tiptap</h1>
-        <label class="flex cursor-pointer items-center gap-2">
+
+        <label class="flex cursor-pointer items-center gap-2 p-0 m-0">
           <svg width="16" height="16"><use href="#moon" /></svg>
           <input
             type="checkbox"
@@ -36,31 +37,33 @@
         </label>
       </header>
 
-      <div class="card shadow-sm">
+      <div class="card bg-base-200 shadow-sm">
         <div class="card-body">
+          <h3 class="card-title">Editor</h3>
           <div
             id="toolbar"
             class="flex flex-wrap gap-1"
             data-signals="{ bold: false, italic: false, underline: false, strike: false, paragraph: true, heading1: false, heading2: false, heading3: false, bulletList: false, orderedList: false, blockquote: false, codeBlock: false }"
             data-on:editorupdate__window="
-                  $bold = editor.isActive('bold');
-                  $italic = editor.isActive('italic');
-                  $underline = editor.isActive('underline');
-                  $strike = editor.isActive('strike');
-                  $paragraph =
-                    editor.isActive('paragraph') &&
-                    !editor.isActive('bulletList') &&
-                    !editor.isActive('orderedList') &&
-                    !editor.isActive('blockquote') &&
-                    !editor.isActive('codeBlock');
-                  $heading1 = editor.isActive('heading', { level: 1 });
-                  $heading2 = editor.isActive('heading', { level: 2 });
-                  $heading3 = editor.isActive('heading', { level: 3 });
-                  $bulletList = editor.isActive('bulletList');
-                  $orderedList = editor.isActive('orderedList');
-                  $blockquote = editor.isActive('blockquote');
-                  $codeBlock = editor.isActive('codeBlock');
-                "
+              $bold = editor.isActive('bold');
+              $italic = editor.isActive('italic');
+              $underline = editor.isActive('underline');
+              $strike = editor.isActive('strike');
+              $paragraph =
+              editor.isActive('paragraph') &&
+              !editor.isActive('bulletList') &&
+              !editor.isActive('orderedList') &&
+              !editor.isActive('blockquote') &&
+              !editor.isActive('codeBlock');
+              $heading1 = editor.isActive('heading', { level: 1 });
+              $heading2 = editor.isActive('heading', { level: 2 });
+              $heading3 = editor.isActive('heading', { level: 3 });
+              $bulletList = editor.isActive('bulletList');
+              $orderedList = editor.isActive('orderedList');
+              $blockquote = editor.isActive('blockquote');
+              $codeBlock = editor.isActive('codeBlock');
+              $editorHtml = beautify(editor.getHTML(), { indent_size: 2 });
+            "
           >
             <button
               id="btn-bold"
@@ -197,19 +200,19 @@
               id="btn-save"
               title="Save"
               class="btn btn-sm btn-square btn-primary"
-              data-on:click="$editorHtml = beautify(editor.getHTML(), { indent_size: 2 }); @patch('/content')"
+              data-on:click="@patch('/content')"
             >
               <svg width="16" height="16"><use href="#save" /></svg>
             </button>
           </div>
-          <div id="editor" class="rounded-xl bg-base-200 p-4"></div>
+          <div id="editor" class="rounded-xl bg-base-300 p-4"></div>
         </div>
       </div>
 
-      <div class="card shadow-sm">
+      <div class="card bg-base-200 shadow-sm">
         <div class="card-body">
           <div class="flex items-center justify-between">
-            <h3 class="text-base font-semibold">Stored Content (raw)</h3>
+            <h3 class="card-title">Stored Content (raw)</h3>
             <button
               id="btn-copy"
               title="Copy to clipboard"
@@ -222,7 +225,7 @@
           {{block "raw-preview" .}}
           <pre
             id="db-preview"
-            class="rounded-xl bg-base-200 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
+            class="rounded-xl bg-base-300 p-4 text-sm text-base-content/80 overflow-x-auto whitespace-pre-wrap"
             data-on:click="navigator.clipboard.writeText($rawPreview)"
             data-text="beautify($rawPreview, { indent_size: 2 })"
           ></pre>
@@ -230,17 +233,83 @@
         </div>
       </div>
 
-      <div class="card shadow-sm">
+      <div class="card bg-base-200 shadow-sm">
         <div class="card-body">
-          <h3 class="text-base font-semibold">Stored Content (rendered)</h3>
+          <h3 class="card-title">Stored Content (rendered)</h3>
           {{block "rendered-preview" .}}
-          <div id="rendered-preview" class="tiptap rounded-xl bg-base-200 p-4">
+          <div id="rendered-preview" class="tiptap rounded-xl bg-base-300 p-4">
             {{.RenderedPreview}}
           </div>
           {{end}}
         </div>
       </div>
-    </div>
+    </main>
+
+    <aside class="mx-auto w-full lg:w-md space-y-6 px-6 py-8">
+      <div class="card bg-base-200 shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title">Signals</h3>
+          <ul class="flex flex-col gap-2">
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$bold</span>
+              <span data-text="$bold"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$italic</span>
+              <span data-text="$italic"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$underline</span>
+              <span data-text="$underline"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$strike</span>
+              <span data-text="$strike"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$paragraph</span>
+              <span data-text="$paragraph"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$heading1</span>
+              <span data-text="$heading1"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$heading2</span>
+              <span data-text="$heading2"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$heading3</span>
+              <span data-text="$heading3"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$bulletList</span>
+              <span data-text="$bulletList"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$orderedList</span>
+              <span data-text="$orderedList"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$blockquote</span>
+              <span data-text="$blockquote"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$codeBlock</span>
+              <span data-text="$codeBlock"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$editorHtml</span>
+              <span data-text="$editorHtml" class="truncate"></span>
+            </li>
+            <li class="flex flex-row gap-2 justify-between items-center">
+              <span>$rawPreview</span>
+              <span data-text="$rawPreview" class="truncate"></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
 
     <!-- lucide static icons -->
     <svg style="display: none" xmlns="http://www.w3.org/2000/svg">
