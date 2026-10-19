@@ -13,3 +13,7 @@ it before forwarding. The reverse proxy must support unbuffered SSE responses.
 
 In Coolify choose Dockerfile, repository-root build context, `/Dockerfile`,
 and exposed port 3000. Content is held in memory and resets on restart.
+
+Deployments are managed by central Coolify on Shared. Pushes to the configured
+production branch deploy automatically through the Forgejo bridge. Host Caddy
+provides HTTPS; application listeners are bound to loopback.
